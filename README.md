@@ -95,7 +95,7 @@ not as an external or optional module.
 ## Project structure
 
 ```
-automation_finance/
+automation-system/
 │
 ├── engine/                           → Core automation engine (billing, generation, processing)
 ├── data/                             → Internal data storage (clients, invoices, tracking)
