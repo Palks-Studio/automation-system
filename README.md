@@ -1,6 +1,6 @@
 <p align="center">
-  <img src="docs/images/facturx_en.png"
-       alt="Factur-X invoicing workflow diagram — CSV processing to PDF generation with embedded XML"
+  <img src="docs/images/facture_en.png"
+       alt="Invoicing workflow diagram — CSV processing to PDF generation"
        width="1200">
 </p>
 
@@ -9,8 +9,6 @@
 ![License](https://img.shields.io/badge/License-LICENSE.md-lightgreen.svg)
 ![PHP](https://img.shields.io/badge/PHP-CLI-777BB4?style=flat)
 ![Automation](https://img.shields.io/badge/Type-Automation-0095b1?style=flat)
-![Factur-X](https://img.shields.io/badge/Invoice-Factur--X-151b1c?style=flat)
-[![Batch Invoicing (Factur-X)](https://img.shields.io/badge/Batch%20Invoicing%20(Factur--X)-0095b1?style=flat)](https://palks-studio.com/en/batch-invoicing-facturx)
 
 <p align="center">
   <a href="https://palks-studio.com">
@@ -27,8 +25,6 @@
 
 This README documents design principles and system architecture.  
 It intentionally avoids operational procedures and sensitive details.
-
-[![Batch Invoicing (Factur-X)](https://img.shields.io/badge/Batch%20Invoicing%20(Factur--X)-0095b1?style=flat)](https://palks-studio.com/en/batch-invoicing-facturx)
 
 ---
 
@@ -70,25 +66,6 @@ The billing system now supports:
 
 This functional expansion did not alter  
 the deterministic, auditable, and traceable nature of the system.
-
-### Electronic invoicing (Factur-X)
-
-The system natively supports the generation of Factur-X invoices (hybrid PDF with embedded XML),  
-in compliance with the European standard EN 16931 (Comfort profile):  
-
-- generation of EN 16931-compliant Factur-X XML  
-- XML validation (XSD and Schematron)  
-- embedding of the XML into the PDF document  
-- production of a single final document (Factur-X hybrid PDF)  
-- direct integration within automation processes  
-- no parallel formats  
-- no persistent XML storage
-
-The system is designed for business compliance and e-invoicing interoperability (France / EU).  
-Generated invoices comply with the PDF/A-3 standard for long-term archiving.
-
-Factur-X is treated as a native component of the system,  
-not as an external or optional module.
 
 ---
 
@@ -423,9 +400,7 @@ with a strong emphasis on rigor, traceability, and long-term maintainability.
 ## Libraries
 
 - mPDF 8.3 (mpdf/mpdf) — PDF/A-1b generation (invoices and paid receipts)  
-- setasign/fpdi — PDF reading and overlay (stamping via invoice stamper)  
-- factur-x 3.15 (Python) — Factur-X XML injection and PDF/A-3 conversion  
-- pypdf — automatic dependency of factur-x
+- setasign/fpdi — PDF reading and overlay (stamping via invoice stamper)
 
 ---
 
