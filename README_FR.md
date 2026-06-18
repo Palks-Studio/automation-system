@@ -1,6 +1,6 @@
 <p align="center">
-  <img src="docs/images/facturx_fr.png"
-       alt="Factur-X invoicing workflow diagram — CSV processing to PDF generation with embedded XML"
+  <img src="docs/images/facture_fr.png"
+       alt="Invoicing workflow diagram — CSV processing to PDF generation"
        width="1200">
 </p>
 
@@ -9,8 +9,6 @@
 ![License](https://img.shields.io/badge/License-LICENSE.md-lightgreen.svg)
 ![PHP](https://img.shields.io/badge/PHP-CLI-777BB4?style=flat)
 ![Automation](https://img.shields.io/badge/Type-Automation-0095b1?style=flat)
-![Factur-X](https://img.shields.io/badge/Invoice-Factur--X-151b1c?style=flat)
-[![Facturation batch Factur-X](https://img.shields.io/badge/Facturation%20batch%20Factur--X-0095b1?style=flat)](https://palks-studio.com/fr/facturation-batch-facturx)
 
 <p align="center">
   <a href="https://palks-studio.com">
@@ -26,8 +24,6 @@
 
 Ce README documente les principes de conception et l’architecture du système.  
 Il évite volontairement toute procédure opérationnelle ou détail sensible.
-
-[![Facturation batch Factur-X](https://img.shields.io/badge/Facturation%20batch%20Factur--X-0095b1?style=flat)](https://palks-studio.com/fr/facturation-batch-facturx)
 
 ---
 
@@ -69,25 +65,6 @@ La facturation prend désormais en charge :
 
 L’enrichissement fonctionnel n’a pas modifié  
 la nature déterministe, auditable et traçable du système.
-
-### Facturation électronique (Factur-X)
-
-Le système intègre nativement la génération de factures Factur-X (PDF hybride avec XML embarqué),  
-conformément à la norme européenne EN 16931 (profil Comfort) :  
-
-- génération d’un XML Factur-X conforme à la norme EN 16931  
-- validation du XML (XSD et Schematron)  
-- intégration du XML dans le document PDF  
-- production d’un document final unique (PDF hybride Factur-X)  
-- intégration directe dans les processus d’automatisation  
-- aucun format parallèle  
-- aucun stockage XML persistant
-
-Le système vise la conformité métier et l’interopérabilité en e-facturation (France / UE).  
-Les factures générées respectent le standard PDF/A-3 pour l’archivage long terme.
-
-Factur-X est traité comme un composant natif du moteur,  
-et non comme un module externe ou optionnel.
 
 ---
 
@@ -422,9 +399,7 @@ avec une exigence forte de rigueur, traçabilité et maintenabilité long terme.
 ## Bibliothèques
 
 - mPDF 8.3 (mpdf/mpdf) — génération PDF/A-1b (factures et acquittées)  
-- setasign/fpdi — lecture et superposition PDF (acquittement via invoice stamper)  
-- factur-x 3.15 (Python) — injection XML Factur-X et conversion PDF/A-3  
-- pypdf — dépendance automatique de factur-x
+- setasign/fpdi — lecture et superposition PDF (acquittement via invoice stamper)
 
 ---
 
