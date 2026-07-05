@@ -34,7 +34,7 @@ It intentionally avoids operational procedures and sensitive details.
 
 This repository presents a financial automation system designed to handle:  
 
-- invoice generation (single & batch)  
+- the generation of Factur-X electronic invoices (direct and batch), compliant with the EN 16931 European standard (Comfort profile)  
 - revenue tracking  
 - payment reconciliation  
 - client balances  
@@ -58,13 +58,15 @@ Over time, the engine has been progressively extended
 to cover real-world business cases,  
 without compromising its original design principles.
 
+Invoice generation produces hybrid Factur-X documents (PDF/A-3 with embedded XML), compliant with the EN 16931 European standard (Comfort profile).
+
 The billing system now supports:  
 
 - multi-line invoices  
 - multiple VAT rates per invoice  
 - complex or extended service periods  
 - multi-month billing scenarios  
-- complex combinations while remaining EN16931 Comfort compliant
+- complex combinations while remaining EN16931 Comfort compliant  
 
 This functional expansion did not alter  
 the deterministic, auditable, and traceable nature of the system.
@@ -401,7 +403,7 @@ with a strong emphasis on rigor, traceability, and long-term maintainability.
 
 ## Libraries
 
-- mPDF 8.3 (mpdf/mpdf) — PDF/A-1b generation (invoices and paid receipts)  
+- mPDF 8.3 (mpdf/mpdf) — generation of PDF/A-3 Factur-X documents (electronic invoices) and PDF/A-1b documents (paid invoice copies)  
 - setasign/fpdi — PDF reading and overlay (stamping via invoice stamper)
 
 ---
