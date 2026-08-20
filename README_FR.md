@@ -104,7 +104,7 @@ automation-system/
 
 
 ```
-palks-studio.com/
+web/
 ├── library/
 │   ├── onboarding-client-fr.html         → Génération contrat + configuration client (FR)
 │   ├── onboarding-client-en.html         → Contract generation + client configuration (EN)
