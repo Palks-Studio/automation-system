@@ -47,7 +47,7 @@ It operates:
 - without a database  
 - without a CMS  
 - without a SaaS dependency  
-- without any exposed web interface
+- with a web surface limited to strictly necessary entry points
 
 All executions run server-side, via CLI scripts and cron, with a strict separation of responsibilities.
 
@@ -277,6 +277,27 @@ and does not interfere with the monthly execution cycle.
 
 The system never infers missing information.
 
+### Client integration cycle
+
+The integration of a new client follows a deterministic and traceable workflow:
+
+1. collection and validation of contractual information  
+2. generation of contractual documents  
+3. creation of onboarding data  
+4. generation of a unique client identifier  
+5. creation of the associated direct and batch configurations  
+6. initialization of operational tracking  
+7. assignment of individual secure access to the monthly upload interface  
+8. association of subsequent uploads with the client's internal identity
+
+Access to the upload interface is not generic.  
+It is permanently associated with the client configuration in order to preserve  
+continuity throughout the operational cycle.
+
+Each step produces or consumes explicit data.  
+No client identity, configuration or relationship between components  
+is inferred implicitly.
+
 ---
 
 ## Batch invoicing model
@@ -369,13 +390,15 @@ and does not replace scheduled system execution.
 
 ## Security posture
 
-- CLI-only execution  
-- no exposed endpoints  
-- no browser access  
-- no external API dependency for core operations  
-- data stored locally on the server
+- automation engine executed exclusively server-side  
+- no direct web exposure of the automation engine  
+- web entry points limited to strictly necessary interfaces  
+- separation between public interfaces and internal processing  
+- no critical API dependency  
+- sensitive data stored server-side
 
-Security is achieved through absence of surface, not complexity.
+The web surface is deliberately limited and isolated  
+from internal execution components.
 
 ---
 
