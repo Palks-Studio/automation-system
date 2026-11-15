@@ -18,7 +18,8 @@
   </a>
 </p>
 
-# Palks Studio — Système d’automatisation  
+# Palks Studio : Système d’automatisation
+
 **Automatisation financière conçue pour la rigueur, la traçabilité et la durée**
 
 > Ce dépôt constitue une présentation technique et une documentation du projet.  
@@ -31,9 +32,9 @@ Il évite volontairement toute procédure opérationnelle ou détail sensible.
 
 ## Vue d’ensemble
 
-Ce dépôt présente un système d’automatisation financière conçu pour gérer :  
+Ce dépôt présente un système d’automatisation financière conçu pour gérer :
 
-- la génération de factures électroniques Factur-X (PDF/A-3 avec XML embarqué), conformes à la norme européenne EN 16931 (profil Comfort), en mode direct et batch  
+- la génération de factures électroniques Factur-X (PDF/A-3 avec XML embarqué), au profil Comfort de Factur-X, correspondant à EN 16931, en mode direct et batch  
 - le suivi des recettes  
 - la réconciliation des paiements  
 - les soldes clients  
@@ -41,34 +42,46 @@ Ce dépôt présente un système d’automatisation financière conçu pour gér
 
 Le système est déterministe, auditable et explicite par conception.
 
-Il fonctionne :  
+Il fonctionne :
 
 - sans base de données  
 - sans CMS  
 - sans dépendance SaaS  
 - avec une surface web limitée aux points d’entrée strictement nécessaires
 
-Toutes les exécutions se font côté serveur, via scripts CLI et cron, avec une séparation stricte des responsabilités.
+Les traitements automatisés s’exécutent côté serveur via cron. La vérification des paiements est la seule opération effectuée manuellement en CLI. Les interfaces web assurent les échanges nécessaires avec les clients, sans exposer directement le moteur.
 
 Ce projet n’est pas un produit, pas un SaaS, pas un outil clé en main.  
+
 Il documente une approche de production sérieuse de l’automatisation financière.
 
 Depuis ses premières versions, le moteur a été progressivement enrichi  
+
 pour couvrir des cas métier réels et complexes, sans remettre en cause  
+
 les principes de départ.
 
-La génération des factures produit des documents hybrides Factur-X (PDF/A-3 avec XML embarqué), conformes à la norme européenne EN 16931 (profil Comfort).
+La génération des factures produit des documents hybrides Factur-X (PDF/A-3 avec XML embarqué), au profil Comfort de Factur-X, correspondant à EN 16931. Le pipeline intègre les validations XSD et Schematron.
 
-La facturation prend désormais en charge :  
+La facturation prend en charge les factures uniquement, sans génération de devis. Elle couvre :
 
 - des factures multi-lignes  
 - des factures à multi-taux de TVA  
 - des périodes de service étendues ou fractionnées  
 - des facturations couvrant plusieurs mois  
-- des combinaisons complexes tout en restant conformes EN16931 Comfort
+- des combinaisons complexes tout en restant conformes au profil Comfort de Factur-X (EN 16931)
 
 L’enrichissement fonctionnel n’a pas modifié  
+
 la nature déterministe, auditable et traçable du système.
+
+---
+
+## Retour d’expérience technique
+
+Un article publié sur DEV Community revient sur la conception du moteur Factur-X et les difficultés rencontrées lors de son développement : validation des données, règles métier, périodes de facturation et automatisation sans base de données.
+
+[Building a Factur-X / EN16931 engine from scratch: what actually took time](https://dev.to/palks_studio/building-a-factur-x-en16931-engine-from-scratch-what-actually-took-time-2bg2) (en anglais).
 
 ---
 
@@ -102,7 +115,6 @@ automation-system/
     └── SYSTEM_OVERVIEW_AUTOMATION.md → Billing Automation System Overview (EN)
 ```
 
-
 ```
 web/
 ├── library/
@@ -125,7 +137,6 @@ web/
     └── secure_tokens.json                → Stockage des tokens de téléchargement (FR) / Download token storage (EN)
 ```
 
-
 ---
 
 ## Ce que ce dépôt est (et n’est pas)
@@ -135,87 +146,78 @@ web/
 - une architecture documentée d’automatisation financière  
 - un système pensé pour être prévisible et auditable  
 - un exemple de séparation stricte entre facturation, paiements et comptabilité  
-- un système réel utilisé en conditions de production
+- un système réel, anciennement utilisé en conditions de production
 
 ### Ce dépôt n’est pas
 
 - un logiciel de comptabilité certifié  
 - un outil de facturation prêt à l’emploi  
 - un système de paiement automatisé  
-- une application web ou une API
+- une application web autonome ou une API publique de facturation
 
-Les données produites sont destinées à un usage interne et opérationnel,  
-et à une intégration propre avec des processus comptables classiques.
+Les données produites sont destinées à un usage interne et opérationnel, et à une intégration propre avec des processus comptables classiques.
 
 ---
 
 ## Principes de conception
 
-Ce système repose sur un ensemble de principes non négociables :  
+Ce système repose sur un ensemble de principes non négociables :
 
-- **Aucune magie**  
+- ****Aucune magie****  
   Chaque opération est explicite et traçable.
 
-- **Aucun traitement silencieux**  
+- ****Aucun traitement silencieux****  
   Une erreur bloque l’exécution et est loggée.
 
-- **Aucune correction implicite**  
+- ****Aucune correction implicite****  
   Une donnée invalide est rejetée, jamais “corrigée”.
 
-- **Les fichiers sont des preuves**  
+- ****Les fichiers sont des preuves****  
   Les artefacts générés sont considérés comme immuables.
 
-- **Séparation stricte des responsabilités**  
+- ****Séparation stricte des responsabilités****  
   Facturation, paiements, soldes, reçus et exports sont indépendants.
 
-- **Exécution exclusivement en CLI**  
-  Aucun accès web, aucune ambiguïté.
+- ****Automatisation côté serveur****  
+  Les traitements automatisés sont planifiés via cron. La vérification des paiements s’effectue manuellement en CLI. Les points d’entrée web restent isolés du moteur.
 
-Ces choix privilégient la prévisibilité à la commodité,  
-et la clarté à la vitesse.
+Ces choix privilégient la prévisibilité à la commodité, et la clarté à la vitesse.
 
-L’enrichissement progressif du moteur  
-n’a pas remis en cause ces principes.
+L’enrichissement progressif du moteur n’a pas remis en cause ces principes.
 
-Les fonctionnalités ajoutées  
-(multi-lignes, multi-taux de TVA, périodes complexes)  
-respectent strictement les mêmes règles  
-de prévisibilité, de traçabilité et de rejet explicite.
+Les fonctionnalités ajoutées (multi-lignes, multi-taux de TVA, périodes complexes) respectent strictement les mêmes règles de prévisibilité, de traçabilité et de rejet explicite.
 
 ---
 
 ## Architecture du système (vue globale)
 
-Le système est composé de couches indépendantes, chacune ayant une responsabilité unique :  
+Le système est composé de couches indépendantes, chacune ayant une responsabilité unique :
 
-- **Moteurs de facturation**  
+- ****Moteurs de facturation****  
   - facturation directe  
   - facturation batch (CSV)
 
-- **Règles métier**  
+- ****Règles métier****  
   - logique tarifaire centralisée  
   - source de vérité unique
 
-- **Couche d’alertes**  
+- ****Couche d’alertes****  
   - alertes bloquantes vs informatives  
   - retours d’exécution explicites
 
-- **Couche paiements**  
+- ****Couche paiements****  
   - enregistrements manuels  
   - volontairement découplée de la facturation
 
-- **Réconciliation des soldes**  
+- ****Réconciliation des soldes****  
   - calcul facturé vs payé  
   - détection payé / impayé
-
-- **Couche exports**  
+  
+- ****Couche exports****  
   - fichiers CSV exploitables comptablement  
   - régénérables à tout moment
 
-Certaines couches peuvent évoluer indépendamment  
-sans modifier les autres,  
-ce qui permet d’enrichir le système  
-sans effet de bord global.
+Certaines couches peuvent évoluer indépendamment sans modifier les autres, ce qui permet d’enrichir le système sans effet de bord global.
 
 ---
 
@@ -223,46 +225,42 @@ sans effet de bord global.
 
 Le système fonctionne selon un cycle fermé et reproductible :  
 
-1. **Phase de génération**  
+1. ****Phase de génération****  
    Les factures sont produites selon des règles explicites.
 
-2. **Phase de paiement**  
+2. ****Phase de paiement****  
    Les paiements sont enregistrés indépendamment, sans automatisme.
+
+3. ****Phase de réconciliation****  
+   Les montants facturés sont comparés aux paiements reçus.
+
+4. ****Phase de consolidation****  
+   Les soldes clients sont calculés et mis à jour.
+
+5. ****Phase d’export****  
+   Les données comptables sont générées à la demande.
 
 ### Outil d’acquittement des factures
 
-Un outil opérationnel complémentaire permet de générer des versions  
-acquittées des factures à partir des PDF originaux.
+[Invoice Stamper](https://github.com/Palks-Studio/invoice-stamper), un outil opérationnel complémentaire indépendant du moteur, permet de générer des versions acquittées des factures à partir des PDF originaux.
 
-Cet outil :  
+Cet outil :
 
-- accepte une archive ZIP contenant les factures  
-- détecte automatiquement les fichiers PDF  
-- applique un marquage explicite "ACQUITTEE" avec date de paiement  
-- génère une nouvelle version du document  
+- accepte une archive ZIP contenant les factures
+- détecte automatiquement les fichiers PDF
+- applique un marquage explicite "ACQUITTEE" avec date de paiement
+- génère une nouvelle version du document
 - permet un traitement unitaire ou batch
 
-Cet outil n’intervient pas dans le moteur de facturation lui-même  
-et ne modifie jamais les factures originales.
+Cet outil n’intervient pas dans le moteur de facturation lui-même et ne modifie jamais les factures originales.
 
-Les documents acquittés sont considérés comme des artefacts  
-opérationnels dérivés des factures émises.
-
-3. **Phase de réconciliation**  
-   Les montants facturés sont comparés aux paiements reçus.
-
-4. **Phase de consolidation**  
-   Les soldes clients sont calculés et mis à jour.
-
-5. **Phase d’export**  
-   Les données comptables sont générées à la demande.
+Les documents acquittés ne sont pas des factures Factur-X. Ils sont considérés comme des artefacts opérationnels dérivés des factures émises.
 
 ### Outil d’onboarding client
 
-Un composant dédié transforme les données issues du formulaire d’onboarding  
-en configuration client interne, utilisée par le système d’automatisation.
+Un composant dédié transforme les données issues du formulaire d’onboarding en configuration client interne, utilisée par le système d’automatisation.
 
-Lors du traitement :  
+Lors du traitement :
 
 - génération d’un identifiant client unique  
 - création de la configuration client  
@@ -270,8 +268,7 @@ Lors du traitement :
 - initialisation du suivi des paiements  
 - archivage des données d’onboarding traitées
 
-Cette étape intervient strictement en phase de préparation  
-et n’interfère pas avec le cycle d’exécution mensuel.
+Cette étape intervient strictement en phase de préparation et n’interfère pas avec le cycle d’exécution mensuel.
 
 Le système ne déduit jamais une information manquante.
 
@@ -288,46 +285,44 @@ L’intégration d’un nouveau client suit une chaîne déterministe et traçab
 7. attribution d’un accès individuel sécurisé au dépôt mensuel  
 8. rattachement des dépôts ultérieurs à l’identité interne du client
 
-L’accès au dépôt n’est pas générique.  
-Il est associé durablement à la configuration du client afin de préserver  
-la continuité du cycle d’exploitation.
+L’accès au dépôt n’est pas générique.
 
-Chaque étape produit ou consomme des données explicites.  
-Aucune identité client, configuration ou relation entre composants  
-n’est déduite implicitement.
+Il est associé durablement à la configuration du client afin de préserver la continuité du cycle d’exploitation.
+
+Chaque étape produit ou consomme des données explicites.
+
+Aucune identité client, configuration ou relation entre composants n’est déduite implicitement.
 
 ---
-
 ## Facturation batch
 
-En mode batch :  
+En mode batch :
 
 - un client fournit un fichier CSV  
-- une ligne CSV correspond à une facture  
+- une ligne CSV correspond à une ligne de facturation
+- les lignes portant le même numéro de facture sont regroupées dans une facture unique  
 - la validation est stricte et structurelle  
 - le batch entier s’arrête à la première erreur  
 - les entrées brutes sont archivées avant consommation
 
 Ce modèle privilégie l’intégrité des données au succès partiel.
 
-Le modèle de facturation prend en charge  
-des cas complexes sans modifier le cycle d’exécution :  
+Le modèle de facturation prend en charge des cas complexes sans modifier le cycle d’exécution :
 
 - factures multi-lignes  
 - multi-taux de TVA au sein d’une même facture  
 - périodes de service étendues ou fractionnées  
 - facturation couvrant plusieurs mois
 
-Ces capacités sont intégrées  
-sans introduire de logique conditionnelle implicite  
-ni de traitement spécial hors moteur.
+Ces capacités sont intégrées sans introduire de logique conditionnelle implicite ni de traitement spécial hors moteur.
 
-### Point d’entrée — dépôt CSV client
+### Point d’entrée : dépôt CSV client
 
 Le fichier CSV mensuel est déposé par le client via un formulaire d’upload dédié,  
+
 accessible uniquement via un lien sécurisé individuel transmis après validation contractuelle.
 
-Le point d’entrée :  
+Le point d’entrée :
 
 - accepte uniquement des fichiers CSV  
 - met à disposition un modèle CSV de référence téléchargeable  
@@ -335,8 +330,7 @@ Le point d’entrée :
 - applique une règle d’unicité de dépôt par client et par période  
 - conserve le fichier pour validation stricte en aval
 
-Le CSV déposé est traité comme une **source brute de données de facturation**  
-et n’est jamais considéré comme une facture finale.
+Le CSV déposé est traité comme une ****source brute de données de facturation**** et n’est jamais considéré comme une facture finale.
 
 Il est ensuite validé et traité exclusivement dans le cadre du workflow d’automatisation batch.
 
@@ -344,7 +338,7 @@ Il est ensuite validé et traité exclusivement dans le cadre du workflow d’au
 
 ## Intégrité et garde-fous
 
-Le système met en œuvre :  
+Le système met en œuvre :
 
 - protections anti-doublons  
 - compteurs séquentiels annuels  
@@ -355,34 +349,29 @@ Le système met en œuvre :
 
 Un arrêt franc est considéré plus sûr qu’un traitement incomplet.
 
-Les règles de validation restent identiques  
-quel que soit le niveau de complexité des factures.
+Les règles de validation restent identiques quel que soit le niveau de complexité des factures.
 
-Un cas complexe est traité  
-avec les mêmes exigences qu’un cas simple.
+Un cas complexe est traité avec les mêmes exigences qu’un cas simple.
 
 ---
 
 ## Mode mono-client (exécution ciblée)
 
-Certains scripts CLI du moteur supportent un paramètre optionnel :  
+Certains scripts internes du moteur supportent un paramètre optionnel :
 
 `--client=<client_id>`
 
-Ce mode permet une exécution ciblée sur un client unique  
-à des fins de diagnostic ou de reprise contrôlée.
+Ce mode permet une exécution ciblée sur un client unique à des fins de diagnostic ou de reprise contrôlée.
 
-Le filtrage repose exclusivement sur le `client_id`  
-généré lors de l’onboarding.
+Le filtrage repose exclusivement sur le `client_id` généré lors de l’onboarding.
 
-Ce mécanisme n’altère pas :  
+Ce mécanisme n’altère pas :
 
 - les protections anti-doublon  
 - les flags d’exécution  
-- la logique métier globale 
+- la logique métier globale
 
-Il constitue un outil d’exploitation ponctuel,  
-et ne remplace pas le fonctionnement planifié du système.
+Il constitue un mécanisme de ciblage ponctuel, et ne remplace pas le fonctionnement planifié du système.
 
 ---
 
@@ -395,14 +384,13 @@ et ne remplace pas le fonctionnement planifié du système.
 - aucune dépendance API critique  
 - données sensibles conservées côté serveur
 
-La surface web est volontairement limitée et isolée  
-des composants internes d’exécution.
+La surface web est volontairement limitée et isolée des composants internes d’exécution.
 
 ---
 
 ## Maintenance et pérennité
 
-Le système est conçu pour :  
+Le système est conçu pour :
 
 - être compris sans son auteur  
 - être audité des mois ou années plus tard  
@@ -415,17 +403,20 @@ Ce dépôt documente une approche d’ingénierie, pas un raccourci.
 
 ## État du projet
 
-Statut : Stable — utilisé en conditions réelles de production.
+**Statut : hors service, projet de portfolio technique.**
 
-Le système est conçu pour fonctionner de manière autonome,  
-avec une exigence forte de rigueur, traçabilité et maintenabilité long terme.
+Le système a été développé et exploité en conditions réelles. Il n’est plus proposé comme service et n’est plus utilisé en interne. Les contraintes opérationnelles liées à la réforme française de la facturation électronique, ainsi que les coûts et la complexité qu’elles auraient imposés aux clients, ont conduit à l’arrêt de son exploitation.
+
+Le projet est conservé comme réalisation technique majeure du portfolio de Palks Studio. La génération de documents Factur-X conformes ne constitue pas à elle seule une prise en charge de l’ensemble des obligations de transmission et de reporting de la réforme.
+
+Le système est conçu pour fonctionner de manière autonome, avec une exigence forte de rigueur, traçabilité et maintenabilité long terme.
 
 ---
 
 ## Bibliothèques
 
-- mPDF 8.3 (mpdf/mpdf) — génération de documents PDF/A-3 Factur-X (factures électroniques) et PDF/A-1b (factures acquittées)  
-- setasign/fpdi — lecture et superposition PDF (acquittement via invoice stamper)
+- mPDF 8.3 (mpdf/mpdf) – génération de documents PDF/A-3 Factur-X (factures électroniques) et PDF/A-1b (factures acquittées)  
+- setasign/fpdi – lecture et superposition PDF (acquittement via invoice stamper)
 
 ---
 
