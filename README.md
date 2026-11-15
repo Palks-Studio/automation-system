@@ -19,7 +19,8 @@
 </p>
 
 
-# Palks Studio — Automation System
+# Palks Studio : Automation System
+
 **Financial automation built for rigor, traceability, and longevity**
 
 > This repository is a technical presentation and documentation repository.  
@@ -32,44 +33,50 @@ It intentionally avoids operational procedures and sensitive details.
 
 ## Overview
 
-This repository presents a financial automation system designed to handle:  
+This repository presents a financial automation system designed to handle:
 
-- the generation of Factur-X electronic invoices (direct and batch), compliant with the EN 16931 European standard (Comfort profile)  
+- the generation of Factur-X electronic invoices (PDF/A-3 with embedded XML), using the Factur-X Comfort profile corresponding to EN 16931, in both direct and batch modes  
 - revenue tracking  
 - payment reconciliation  
-- client balances  
+- customer balances  
 - accounting-ready exports
 
 The system is deterministic, auditable, and explicit by design.
 
-It operates:  
+It operates:
 
 - without a database  
 - without a CMS  
-- without a SaaS dependency  
+- without SaaS dependencies  
 - with a web surface limited to strictly necessary entry points
 
-All executions run server-side, via CLI scripts and cron, with a strict separation of responsibilities.
+Automated processes run server-side via cron. Payment verification is the only operation performed manually through the CLI. Web interfaces handle the necessary interactions with clients without directly exposing the engine.
 
-This project is not a product, not a SaaS, and not a plug-and-play tool.  
-It documents a production-grade approach to financial automation.
+This project is not a product, a SaaS, or a turnkey solution.
 
-Over time, the engine has been progressively extended  
-to cover real-world business cases,  
-without compromising its original design principles.
+It documents a rigorous, production-oriented approach to financial automation.
 
-Invoice generation produces hybrid Factur-X documents (PDF/A-3 with embedded XML), compliant with the EN 16931 European standard (Comfort profile).
+Since its earliest versions, the engine has been progressively enhanced to cover real-world, complex business cases without compromising its original design principles.
 
-The billing system now supports:  
+Invoice generation produces hybrid Factur-X documents (PDF/A-3 with embedded XML), using the Factur-X Comfort profile corresponding to EN 16931. The pipeline includes XSD and Schematron validation.
+
+The invoicing system handles invoices only, without quotation generation. It supports:
 
 - multi-line invoices  
-- multiple VAT rates per invoice  
-- complex or extended service periods  
-- multi-month billing scenarios  
-- complex combinations while remaining EN16931 Comfort compliant  
+- invoices with multiple VAT rates  
+- extended or split service periods  
+- invoicing covering multiple months  
+- complex combinations while maintaining compliance with the Factur-X Comfort profile (EN 16931)
 
-This functional expansion did not alter  
-the deterministic, auditable, and traceable nature of the system.
+These functional enhancements have not altered the deterministic, auditable, and traceable nature of the system.
+
+---
+
+## Technical Retrospective
+
+An article published on DEV Community explores the design of the Factur-X engine and the challenges encountered during its development: data validation, business rules, billing periods, and database-free automation.
+
+[Building a Factur-X / EN16931 engine from scratch: what actually took time](https://dev.to/palks_studio/building-a-factur-x-en16931-engine-from-scratch-what-actually-took-time-2bg2)
 
 ---
 
@@ -106,7 +113,6 @@ automation-system/
     └── SYSTEM_OVERVIEW_AUTOMATION.md → Billing Automation System Overview
 ```
 
-
 ```
 web/
 ├── library/
@@ -129,142 +135,130 @@ web/
     └── secure_tokens.json                → Stockage des tokens de téléchargement (FR) / Download token storage (EN)
 ```
 
-
 ---
 
-## What this repository is (and is not)
+## What This Repository Is (and Is Not)
 
 ### This repository is
 
-- a documented architecture for financial automation  
+- a documented financial automation architecture  
 - a system designed to be predictable and auditable  
-- an example of strict separation between billing, payments, and accounting  
-- a real-world system used in production
+- an example of strict separation between invoicing, payments, and accounting  
+- a real system previously used in production
 
 ### This repository is not
 
-- a certified accounting software  
+- certified accounting software  
 - a ready-to-use invoicing tool  
-- a payment processing system  
-- a web application or API service
+- an automated payment system  
+- a standalone web application or a public invoicing API
 
-The outputs produced by this system are intended for internal operational use and for integration with standard accounting workflows.
+The data produced is designed for internal and operational use, and for seamless integration with standard accounting processes.
 
 ---
 
-## Core design principles
+## Design Principles
 
-This system follows a small set of non-negotiable principles:  
+The system is built on a set of non-negotiable principles:
 
 - **No magic**  
   Every operation is explicit and traceable.
 
 - **No silent processing**  
-  Errors stop execution. They are logged and surfaced.
+  An error stops execution and is logged.
 
-- **No implicit correction**  
-  Invalid inputs are rejected, not “fixed”.
+- **No implicit corrections**  
+  Invalid data is rejected, never silently corrected.
 
-- **Files are proofs**  
-  Generated artifacts are considered immutable evidence, not disposable outputs.
+- **Files are evidence**  
+  Generated artifacts are considered immutable.
 
 - **Strict separation of responsibilities**  
-  Billing, payments, balances, receipts, and exports are handled independently.
+  Invoicing, payments, balances, receipts, and exports are independent.
 
-- **CLI-only execution**  
-  No web exposure, no background ambiguity.
+- **Server-side automation**  
+  Automated processes are scheduled via cron. Payment verification is performed manually through the CLI. Web entry points remain isolated from the engine.
 
-These principles favor predictability over convenience and clarity over speed.
+These choices prioritize predictability over convenience, and clarity over speed.
 
-The progressive extension of the engine  
-did not compromise these principles.
+The progressive enhancement of the engine has not compromised these principles.
 
-Newly added capabilities  
-(multi-line invoices, multiple VAT rates, complex service periods)  
-strictly follow the same rules  
-of predictability, traceability, and explicit rejection.
+Additional features (multi-line invoices, multiple VAT rates, complex billing periods) strictly follow the same rules of predictability, traceability, and explicit rejection.
 
 ---
 
-## System architecture (high-level)
+## System Architecture (High-Level Overview)
 
-The system is composed of independent layers, each with a single responsibility:  
+The system consists of independent layers, each with a single responsibility:
 
-- **Billing engines**  
+- **Invoicing engines**  
   - direct invoicing  
-  - batch invoicing (CSV-driven)
+  - batch invoicing (CSV)
 
 - **Business rules**  
-  - centralized pricing and billing logic  
+  - centralized pricing logic  
   - single source of truth
 
-- **Alerting layer**  
-  - blocking vs informational alerts  
+- **Alert layer**  
+  - blocking vs. informational alerts  
   - explicit execution feedback
 
 - **Payment layer**  
-  - manual payment records  
-  - deliberately decoupled from billing
+  - manual payment recording  
+  - deliberately decoupled from invoicing
 
 - **Balance reconciliation**  
-  - computed state (invoiced vs paid)  
-  - paid / unpaid detection
+  - comparison of invoiced vs. paid amounts  
+  - paid / unpaid status detection
 
 - **Export layer**  
-  - accounting-ready CSV outputs  
-  - reproducible at any time
+  - accounting-ready CSV files  
+  - regenerable at any time
 
-Some layers can evolve independently  
-without impacting others,  
-allowing the system to be extended  
-without global side effects.
+Some layers can evolve independently without modifying others, allowing the system to be extended without system-wide side effects.
 
 ---
 
-## Execution model
+## Execution Model
 
-The system runs on a closed, repeatable cycle:  
+The system operates through a closed, reproducible cycle:
 
 1. **Generation phase**  
-   Invoices are generated based on explicit rules and configurations.
+   Invoices are generated according to explicit rules.
 
 2. **Payment phase**  
-   Payments are recorded independently, without automation or assumptions.
-
-### Invoice receipt stamping tool
-
-A complementary operational tool allows the generation of  
-stamped “paid” versions of invoices from the original PDF files.
-
-This tool:  
-
-- accepts a ZIP archive containing invoices  
-- automatically detects PDF files  
-- applies a clear "PAID" / receipt stamp with payment date  
-- generates a new stamped version of the document  
-- supports both single and batch processing
-
-This tool does not interact with the invoicing engine itself  
-and never modifies the original invoices.
-
-Stamped documents are considered operational artefacts  
-derived from the issued invoices.
+   Payments are recorded independently, without automation.
 
 3. **Reconciliation phase**  
-   Invoiced amounts are compared against received payments.
+   Invoiced amounts are compared with payments received.
 
 4. **Consolidation phase**  
-   Client balances are computed and statuses updated.
+   Customer balances are calculated and updated.
 
 5. **Export phase**  
-   Accounting-ready artifacts are produced on demand.
+   Accounting data is generated on demand.
 
-### Client onboarding tool
+### Invoice Payment Stamping Tool
 
-A dedicated component transforms data collected from the onboarding form  
-into an internal client configuration used by the automation system.
+[Invoice Stamper](https://github.com/Palks-Studio/invoice-stamper), a complementary operational tool independent of the engine, generates paid versions of invoices from the original PDF documents.
 
-During processing:  
+This tool:
+
+- accepts a ZIP archive containing invoices
+- automatically detects PDF files
+- applies an explicit "PAID" stamp with the payment date
+- generates a new version of the document
+- supports individual and batch processing
+
+This tool does not interact with the invoicing engine itself and never modifies the original invoices.
+
+The stamped documents are not Factur-X invoices. They are considered operational artifacts derived from the issued invoices.
+
+### Client Onboarding Tool
+
+A dedicated component converts data submitted through the onboarding form into an internal client configuration used by the automation system.
+
+During processing:
 
 - generation of a unique client identifier  
 - creation of the client configuration  
@@ -272,14 +266,13 @@ During processing:
 - initialization of payment tracking  
 - archiving of processed onboarding data
 
-This step occurs strictly during the setup phase  
-and does not interfere with the monthly execution cycle.
+This step takes place strictly during the preparation phase and does not interfere with the monthly execution cycle.
 
 The system never infers missing information.
 
-### Client integration cycle
+### Client Integration Workflow
 
-The integration of a new client follows a deterministic and traceable workflow:
+The integration of a new client follows a deterministic and traceable sequence:
 
 1. collection and validation of contractual information  
 2. generation of contractual documents  
@@ -287,147 +280,140 @@ The integration of a new client follows a deterministic and traceable workflow:
 4. generation of a unique client identifier  
 5. creation of the associated direct and batch configurations  
 6. initialization of operational tracking  
-7. assignment of individual secure access to the monthly upload interface  
-8. association of subsequent uploads with the client's internal identity
+7. assignment of individual, secure access to monthly file submissions  
+8. association of subsequent submissions with the client's internal identity
 
-Access to the upload interface is not generic.  
-It is permanently associated with the client configuration in order to preserve  
-continuity throughout the operational cycle.
+Submission access is not generic.
 
-Each step produces or consumes explicit data.  
-No client identity, configuration or relationship between components  
-is inferred implicitly.
+It is permanently associated with the client's configuration to preserve continuity throughout the operational cycle.
+
+Each step produces or consumes explicit data.
+
+No client identity, configuration, or relationship between components is inferred implicitly.
 
 ---
 
-## Batch invoicing model
+## Batch Invoicing
 
-In batch mode:  
+In batch mode:
 
-- one client provides one CSV file  
-- one CSV line equals one invoice  
+- a client provides a CSV file  
+- each CSV row corresponds to an invoice line item  
+- rows sharing the same invoice number are grouped into a single invoice  
 - validation is strict and structural  
-- the entire batch stops on the first error  
-- raw inputs are archived before consumption
+- the entire batch stops at the first error  
+- raw inputs are archived before processing
 
-This model favors data integrity over partial success.
+This model prioritizes data integrity over partial success.
 
-The billing model supports complex use cases  
-without altering the execution cycle:  
+The invoicing model supports complex cases without modifying the execution cycle:
 
 - multi-line invoices  
 - multiple VAT rates within a single invoice  
 - extended or split service periods  
-- multi-month billing scenarios
+- invoicing covering multiple months
 
-These capabilities are integrated  
-without introducing implicit conditional logic  
-or special-case processing outside the engine.
+These capabilities are integrated without introducing implicit conditional logic or special processing outside the engine.
 
-### Entry point — client CSV submission
+### Entry Point: Client CSV Submission
 
-The monthly CSV file is submitted by the client through a dedicated upload form,  
-accessible only via an individual secure link provided after contract validation.
+The monthly CSV file is submitted by the client through a dedicated upload form, accessible only via an individual secure link provided after contractual validation.
 
-The entry point:  
+The entry point:
 
 - accepts CSV files only  
 - provides a downloadable reference CSV template  
-- stores the file within a structured internal storage system  
-- enforces a single submission per client and per period  
+- stores the file in a structured internal storage system  
+- enforces a single submission per client and billing period  
 - retains the file for strict downstream validation
 
-The submitted CSV is treated as a **raw source of billing data**  
-and is never considered a final invoice.
+The submitted CSV is treated as a **raw source of invoicing data** and is never considered a final invoice.
 
 It is then validated and processed exclusively within the batch automation workflow.
 
 ---
 
-## Integrity & safeguards
+## Integrity and Safeguards
 
-Several mechanisms are enforced across the system:  
+The system implements:
 
-- anti-duplicate protections  
+- duplicate prevention mechanisms  
 - annual sequential counters  
 - immutable archives  
 - explicit execution flags  
 - categorized alerts  
-- exhaustive logging
+- comprehensive logging
 
-A failed execution is considered safer than a partial one.
+A complete halt is considered safer than incomplete processing.
 
-Validation rules remain identical  
-regardless of invoice complexity.
+Validation rules remain identical regardless of invoice complexity.
 
-A complex case is treated  
-with the same requirements as a simple one.
+A complex case is handled with the same requirements as a simple one.
 
 ---
 
-## Single-client mode (targeted execution)
+## Single-Client Mode (Targeted Execution)
 
-Some CLI scripts support an optional parameter:  
+Some internal engine scripts support an optional parameter:
 
 `--client=<client_id>`
 
-This mode allows targeted execution for a single client,  
-mainly for diagnostics or controlled recovery.
+This mode enables targeted execution for a single client for diagnostic purposes or controlled recovery.
 
-Filtering relies exclusively on the onboarding-generated
-`client_id`.
+Filtering relies exclusively on the `client_id` generated during onboarding.
 
-This mechanism does not alter:  
+This mechanism does not alter:
 
-- anti-duplicate protections  
+- duplicate prevention mechanisms  
 - execution flags  
-- core business logic
+- global business logic
 
-It is intended for occasional operational use  
-and does not replace scheduled system execution.
+It provides an occasional targeting mechanism and does not replace the system's scheduled operation.
 
 ---
 
-## Security posture
+## Security Posture
 
 - automation engine executed exclusively server-side  
-- no direct web exposure of the automation engine  
+- no direct web exposure of the engine  
 - web entry points limited to strictly necessary interfaces  
 - separation between public interfaces and internal processing  
-- no critical API dependency  
+- no critical API dependencies  
 - sensitive data stored server-side
 
-The web surface is deliberately limited and isolated  
-from internal execution components.
+The web surface is deliberately limited and isolated from internal execution components.
 
 ---
 
-## Maintenance & longevity
+## Maintenance and Long-Term Sustainability
 
-The system is designed to:  
+The system is designed to:
 
-- be understandable without its original author  
-- be auditable months or years later  
-- degrade loudly rather than silently  
-- integrate cleanly with standard accounting processes
+- be understood without its original author  
+- be audited months or years later  
+- fail visibly  
+- integrate cleanly with standard accounting workflows
 
 This repository documents an engineering approach, not a shortcut.
 
 ---
 
-## Project status
+## Project Status
 
-Status: Stable — used in real production conditions.
+**Status: out of service, technical portfolio project.**
 
-The system has been designed to operate autonomously,  
-with a strong emphasis on rigor, traceability, and long-term maintainability.
+The system was developed and operated in real-world production conditions. It is no longer offered as a service and is no longer used internally. The operational requirements of the French electronic invoicing reform, along with the costs and complexity they would have imposed on clients, led to the discontinuation of its operation.
+
+The project is retained as a major technical achievement in the Palks Studio portfolio. Generating compliant Factur-X documents does not, on its own, cover all the transmission and reporting obligations introduced by the reform.
+
+The system is designed to operate autonomously, with a strong emphasis on rigor, traceability, and long-term maintainability.
 
 ---
 
 ## Libraries
 
-- mPDF 8.3 (mpdf/mpdf) — generation of PDF/A-3 Factur-X documents (electronic invoices) and PDF/A-1b documents (paid invoice copies)  
-- setasign/fpdi — PDF reading and overlay (stamping via invoice stamper)
+- mPDF 8.3 (mpdf/mpdf) – generation of Factur-X PDF/A-3 documents (electronic invoices) and PDF/A-1b documents (paid invoices)  
+- setasign/fpdi – PDF reading and overlay processing (payment stamping via Invoice Stamper)
 
 ---
 
