@@ -11,6 +11,7 @@
 ![Automation](https://img.shields.io/badge/Type-Automation-0095b1?style=flat)
 [![YouTube](https://img.shields.io/badge/YouTube-@Palks__Studio-FF0000?style=flat&logo=youtube&logoColor=white)](https://www.youtube.com/@Palks_Studio)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-@Palks__Studio-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/palks-studio/)
+[![DEV.to](https://img.shields.io/badge/DEV.to-Technical%20Article-7C3AED?style=flat&logo=devdotto&logoColor=white)](https://dev.to/palks_studio/building-a-factur-x-en16931-engine-from-scratch-what-actually-took-time-2bg2)
 
 <p align="center">
   <a href="https://palks-studio.com">
